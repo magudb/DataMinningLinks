@@ -3,9 +3,7 @@ var fs = require('fs');
 var _ = require("lodash");
 var url = require('url');
 var storage = require('node-persist');
-storage.initSync({
-	logging:false
-});
+storage.initSync();
 
 var baseDir = "C:\\Users\\mud\\Dropbox\\Blog\\";
 
@@ -25,7 +23,7 @@ function hostCount(uri, rawUrl, next) {
 		url: rawUrl
 	}
 
-	var key = "host_" + uri.hostname.replace(/\s+/g, '_').replace(/[^a-zA-Z-]/g, '_');
+	var key = "host_" + uri.hostname.replace(/\s+/g, '').replace(/[^a-zA-Z-]/g, '').replace(/-/g, '');
 
 	var byHost = storage.getItem(key);
 
@@ -36,6 +34,7 @@ function hostCount(uri, rawUrl, next) {
 		}
 		byHost.uris.push(urlObject);
 		storage.setItemSync(key, byHost);
+		
 	} else {
 		byHost = { 'count': 1, 'uris': [urlObject], host: uri.host }
 		storage.setItemSync(key, byHost);
